@@ -1,0 +1,1 @@
+const fs = require('fs'); const key = 'AIzaSyBLhB3Diq2-hVQLK8Xx7UXYKVrF0sfsg94'; fetch('https://generativelanguage.googleapis.com/v1beta/models?key=' + key).then(res => res.json()).then(data => fs.writeFileSync('test_out.txt', data.models.map(m=>m.name).join(', '), 'utf8'));
