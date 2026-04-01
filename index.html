@@ -2,836 +2,835 @@
 <html lang="zh-TW">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>數位衣櫃管家 - Web 專業版</title>
+   <!-- Google Tag Manager -->
+   <script>(function (w, d, s, l, i) {
+         w[l] = w[l] || []; w[l].push({
+            'gtm.start':
+               new Date().getTime(), event: 'gtm.js'
+         }); var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+               'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', 'GTM-5SL4XJ6V');</script>
+   <!-- End Google Tag Manager -->
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+   <title>數位衣櫃管家 - Web 專業版</title>
 
-  <!-- 引入 CDNs -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <!-- 離線 AI 模型載入 -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js"></script>
+   <!-- 引入 CDNs -->
+   <script src="https://cdn.tailwindcss.com"></script>
+   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+   <!-- 離線 AI 模型載入 -->
+   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js"></script>
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+   <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
 
-    * {
-      font-family: 'Noto Sans TC', sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
+      * {
+         font-family: 'Noto Sans TC', sans-serif;
+         -webkit-tap-highlight-color: transparent;
+      }
 
-    /* 網頁版卷軸優化 */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 10px;
-    }
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
+      /* 網頁版卷軸優化 */
+      ::-webkit-scrollbar {
+         width: 6px;
+         height: 6px;
+      }
 
-    body {
-      background-color: #f8fafc;
-      overflow: hidden; /* 由內部元素各自處理滾動 */
-    }
+      ::-webkit-scrollbar-thumb {
+         background: #cbd5e1;
+         border-radius: 10px;
+      }
 
-    /* 動畫效果 */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-in {
-      animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
+      ::-webkit-scrollbar-track {
+         background: transparent;
+      }
 
-    @keyframes pulse-glow {
-      0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4); }
-      70% { box-shadow: 0 0 0 15px rgba(79, 70, 229, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
-    }
-    .animate-pulse-glow {
-      animation: pulse-glow 2s infinite;
-    }
+      body {
+         background-color: #f8fafc;
+         overflow: hidden;
+         /* 由內部元素各自處理滾動 */
+      }
 
-    /* 畫布透明網格背景 */
-    .bg-checkerboard {
-      background-image: repeating-conic-gradient(#f1f5f9 0 25%, transparent 0 50%);
-      background-size: 24px 24px;
-    }
-  </style>
+      /* 動畫效果 */
+      @keyframes fadeIn {
+         from {
+            opacity: 0;
+            transform: translateY(15px);
+         }
+
+         to {
+            opacity: 1;
+            transform: translateY(0);
+         }
+      }
+
+      .animate-fade-in {
+         animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      @keyframes pulse-glow {
+         0% {
+            box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
+         }
+
+         70% {
+            box-shadow: 0 0 0 15px rgba(79, 70, 229, 0);
+         }
+
+         100% {
+            box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+         }
+      }
+
+      .animate-pulse-glow {
+         animation: pulse-glow 2s infinite;
+      }
+
+      /* 畫布透明網格背景 */
+      .bg-checkerboard {
+         background-image: repeating-conic-gradient(#f1f5f9 0 25%, transparent 0 50%);
+         background-size: 24px 24px;
+      }
+   </style>
 </head>
 
 <body>
-  <div id="root"></div>
+   <!-- Google Tag Manager (noscript) -->
+   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5SL4XJ6V" height="0" width="0"
+         style="display:none;visibility:hidden"></iframe></noscript>
+   <!-- End Google Tag Manager (noscript) -->
+   <div id="root"></div>
 
-  <script type="text/babel">
-    const { useState, useEffect, useRef } = React;
+   <script type="text/babel">
+      const { useState, useEffect, useRef } = React;
 
-    // --- 圖示組件 ---
-    const Icon = ({ name, size = 24, className = "" }) => {
-      const icons = {
-        shirt: <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" />,
-        briefcase: <g fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></g>,
-        heart: <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />,
-        sun: <><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></>,
-        wand: <><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.21 1.21 0 0 0 1.72 0L21.64 5.36a1.21 1.21 0 0 0 0-1.72Z" /><path d="M14 7l3 3" /><path d="M5 16l3 3" /><circle cx="7.5" cy="4.5" r=".5" fill="currentColor" /><circle cx="11.5" cy="2.5" r=".5" fill="currentColor" /><circle cx="16.5" cy="4.5" r=".5" fill="currentColor" /></>,
-        trash: <><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></>,
-        rotate: <><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /></>,
-        sparkles: <path d="m12 3 1.91 5.82L20 10.73 15.09 13.91 17 20l-5-3.82L7 20l1.91-6.09L4 10.73l6.09-1.91L12 3z" />,
-        grid: <><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></>,
-        settings: <><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /><circle cx="12" cy="12" r="3" /></>,
-        user: <><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></>,
-        plus: <><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></>,
-        category: <><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></>
+      // --- 圖示組件 ---
+      const Icon = ({ name, size = 24, className = "" }) => {
+         const icons = {
+            shirt: <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" />,
+            briefcase: <g fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></g>,
+            heart: <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />,
+            sun: <><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></>,
+            wand: <><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.21 1.21 0 0 0 1.72 0L21.64 5.36a1.21 1.21 0 0 0 0-1.72Z" /><path d="M14 7l3 3" /><path d="M5 16l3 3" /><circle cx="7.5" cy="4.5" r=".5" fill="currentColor" /><circle cx="11.5" cy="2.5" r=".5" fill="currentColor" /><circle cx="16.5" cy="4.5" r=".5" fill="currentColor" /></>,
+            trash: <><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></>,
+            rotate: <><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /></>,
+            sparkles: <path d="m12 3 1.91 5.82L20 10.73 15.09 13.91 17 20l-5-3.82L7 20l1.91-6.09L4 10.73l6.09-1.91L12 3z" />,
+            grid: <><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></>,
+            settings: <><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /><circle cx="12" cy="12" r="3" /></>,
+            user: <><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></>,
+            plus: <><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></>,
+            category: <><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></>
+         };
+         return (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+               {icons[name] || null}
+            </svg>
+         );
       };
-      return (
-        <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-          {icons[name] || null}
-        </svg>
-      );
-    };
 
-    const typeLabels = { top: '上衣', pants: '褲子', dress: '連身裙', skirt: '半身裙', shoes: '鞋子', bag: '包包' };
+      const typeLabels = { top: '上衣', pants: '褲子', dress: '連身裙', skirt: '半身裙', shoes: '鞋子', bag: '包包' };
 
-    function App() {
-      // --- 狀態管理 ---
-      const [activeTab, setActiveTab] = useState('planner'); // planner | wardrobe | favorites
-      const [wardrobe, setWardrobe] = useState(() => { try { return JSON.parse(localStorage.getItem('ootd_wardrobe')) || []; } catch (e) { return []; } });
-      const [savedOutfits, setSavedOutfits] = useState(() => { try { return JSON.parse(localStorage.getItem('ootd_savedOutfits')) || []; } catch (e) { return []; } });
-      const [customAvatar, setCustomAvatar] = useState(() => localStorage.getItem('ootd_avatar') || null);
+      function App() {
+         // --- 狀態管理 ---
+         const [activeTab, setActiveTab] = useState('planner'); // planner | wardrobe | favorites
+         const [wardrobe, setWardrobe] = useState(() => { try { return JSON.parse(localStorage.getItem('ootd_wardrobe')) || []; } catch (e) { return []; } });
+         const [savedOutfits, setSavedOutfits] = useState(() => { try { return JSON.parse(localStorage.getItem('ootd_savedOutfits')) || []; } catch (e) { return []; } });
+         const [customAvatar, setCustomAvatar] = useState(() => localStorage.getItem('ootd_avatar') || null);
 
-      const [weather, setWeather] = useState('warm');
-      const [occasion, setOccasion] = useState('casual');
-      const [isDrawing, setIsDrawing] = useState(false);
-      const [currentOutfit, setCurrentOutfit] = useState(null);
-      const [viewMode, setViewMode] = useState('model'); // model | grid
+         const [weather, setWeather] = useState('warm');
+         const [occasion, setOccasion] = useState('casual');
+         const [isDrawing, setIsDrawing] = useState(false);
+         const [currentOutfit, setCurrentOutfit] = useState(null);
+         const [viewMode, setViewMode] = useState('model'); // model | grid
 
-      const [processQueue, setProcessQueue] = useState([]);
-      const [isProcessingModalOpen, setIsProcessingModalOpen] = useState(false);
-      const [toastMsg, setToastMsg] = useState('');
+         const [processQueue, setProcessQueue] = useState([]);
+         const [isProcessingModalOpen, setIsProcessingModalOpen] = useState(false);
+         const [toastMsg, setToastMsg] = useState('');
 
-      // 離線自動 AI 狀態
-      const [isAutoMode, setIsAutoMode] = useState(true);
-      const [aiModel, setAiModel] = useState(null);
-      // 模特兒生成狀態
-      const [generatedModelUrl, setGeneratedModelUrl] = useState(null);
-      const [isGeneratingModel, setIsGeneratingModel] = useState(false);
-      const fileInputRef = useRef(null);
-      const avatarInputRef = useRef(null);
+         // 離線自動 AI 狀態
+         const [isAutoMode, setIsAutoMode] = useState(true);
+         const [aiModel, setAiModel] = useState(null);
+         // 模特兒生成狀態
+         const [generatedModelUrl, setGeneratedModelUrl] = useState(null);
+         const [isGeneratingModel, setIsGeneratingModel] = useState(false);
+         const fileInputRef = useRef(null);
+         const avatarInputRef = useRef(null);
 
-      // --- 持久化 ---
-      useEffect(() => { localStorage.setItem('ootd_wardrobe', JSON.stringify(wardrobe)); }, [wardrobe]);
-      useEffect(() => { localStorage.setItem('ootd_savedOutfits', JSON.stringify(savedOutfits)); }, [savedOutfits]);
-      useEffect(() => { if (customAvatar) localStorage.setItem('ootd_avatar', customAvatar); else localStorage.removeItem('ootd_avatar'); }, [customAvatar]);
+         // --- 持久化 ---
+         useEffect(() => { localStorage.setItem('ootd_wardrobe', JSON.stringify(wardrobe)); }, [wardrobe]);
+         useEffect(() => { localStorage.setItem('ootd_savedOutfits', JSON.stringify(savedOutfits)); }, [savedOutfits]);
+         useEffect(() => { if (customAvatar) localStorage.setItem('ootd_avatar', customAvatar); else localStorage.removeItem('ootd_avatar'); }, [customAvatar]);
 
-      // --- 下載離線 AI 模型 ---
-      useEffect(() => {
-         const loadLocalAI = async () => {
-             try {
-                 if (window.mobilenet) {
+         // --- 下載離線 AI 模型 ---
+         useEffect(() => {
+            const loadLocalAI = async () => {
+               try {
+                  if (window.mobilenet) {
                      // 1.0 版本準確度最高，大約 15-20MB
                      const model = await window.mobilenet.load({ version: 1, alpha: 1.0 });
                      setAiModel(model);
-                 }
-             } catch(e) { console.error('離線 AI 載入失敗', e); setIsAutoMode(false); }
-         };
-         loadLocalAI();
-      }, []);
+                  }
+               } catch (e) { console.error('離線 AI 載入失敗', e); setIsAutoMode(false); }
+            };
+            loadLocalAI();
+         }, []);
 
-      const showToast = (msg) => { setToastMsg(msg); setTimeout(() => setToastMsg(''), 3000); };
+         const showToast = (msg) => { setToastMsg(msg); setTimeout(() => setToastMsg(''), 3000); };
 
-      // --- 離線匯入功能 (手動 / AI 自動) ---
-      const handleBatchUpload = async (event) => {
-        const files = Array.from(event.target.files);
-        if (files.length === 0) return;
-        
-        // 取得使用者從 UI 上選擇的分類
-        const categorySelect = document.getElementById('upload-category');
-        const selectedCategory = categorySelect ? categorySelect.value : '';
-        if (!isAutoMode && !selectedCategory) return; // 防呆機制
+         // --- 離線匯入功能 (手動 / AI 自動) ---
+         const handleBatchUpload = async (event) => {
+            const files = Array.from(event.target.files);
+            if (files.length === 0) return;
 
-        setIsProcessingModalOpen(true);
-        const queue = files.map((f, i) => ({ id: Date.now() + i, file: f, name: f.name, status: 'pending', url: URL.createObjectURL(f) }));
-        setProcessQueue(queue);
+            // 取得使用者從 UI 上選擇的分類
+            const categorySelect = document.getElementById('upload-category');
+            const selectedCategory = categorySelect ? categorySelect.value : '';
+            if (!isAutoMode && !selectedCategory) return; // 防呆機制
 
-        let newItems = [];
-        for (let item of queue) {
-          setProcessQueue(prev => prev.map(p => p.id === item.id ? { ...p, status: 'processing', errorMsg: '' } : p));
-          
-          let finalCategory = selectedCategory || 'top';
+            setIsProcessingModalOpen(true);
+            const queue = files.map((f, i) => ({ id: Date.now() + i, file: f, name: f.name, status: 'pending', url: URL.createObjectURL(f) }));
+            setProcessQueue(queue);
 
-          // 若開啟自動模式且模型準備好，就在「本機端」執行圖片辨識
-          if (isAutoMode && aiModel) {
-            try {
-              const img = new Image();
-              img.src = item.url;
-              await new Promise(r => { img.onload = r; img.onerror = r; });
-              
-              const preds = await aiModel.classify(img);
-              const combinedString = preds.map(p => p.className.toLowerCase()).join(" ");
-              
-              // 簡易特徵字詞對應
-              if (combinedString.includes("shoe") || combinedString.includes("sneaker") || combinedString.includes("boot") || combinedString.includes("sandal") || combinedString.includes("footwear")) finalCategory = 'shoes';
-              else if (combinedString.includes("bag") || combinedString.includes("purse") || combinedString.includes("backpack") || combinedString.includes("satchel")) finalCategory = 'bag';
-              else if (combinedString.includes("skirt")) finalCategory = 'skirt';
-              else if (combinedString.includes("dress") || combinedString.includes("gown") || combinedString.includes("robe") || combinedString.includes("pajama")) finalCategory = 'dress';
-              else if (combinedString.includes("jean") || combinedString.includes("trouser") || combinedString.includes("pant") || combinedString.includes("short") || combinedString.includes("denim") || combinedString.includes("sweatpant")) finalCategory = 'pants';
-              else finalCategory = 'top'; //  fallback for shirts, suits, etc.
-              
-            } catch(e) {
-                console.warn("AI 預測異常，轉為預設分類:", e);
-            }
-          } else {
-             // 模擬處理時間特效
-             await new Promise(r => setTimeout(r, 200));
-          }
-          
-          newItems.push({
-            id: Math.random(), imageUrl: item.url, type: finalCategory, name: `${typeLabels[finalCategory] || '單品'}`,
-            timestamp: Date.now()
-          });
-          setProcessQueue(prev => prev.map(p => p.id === item.id ? { ...p, status: 'done' } : p));
-        }
+            let newItems = [];
+            for (let item of queue) {
+               setProcessQueue(prev => prev.map(p => p.id === item.id ? { ...p, status: 'processing', errorMsg: '' } : p));
 
-        setTimeout(() => { 
-           setWardrobe(prev => [...newItems, ...prev]);
-           setIsProcessingModalOpen(false); 
-           setProcessQueue([]); 
-           showToast('✨ 成功匯入 ' + newItems.length + ' 件單品至「' + typeLabels[selectedCategory] + '」分類！'); 
-        }, 1200);
-        
-        event.target.value = ''; // Reset input
-      };
+               let finalCategory = selectedCategory || 'top';
 
-      const deleteItem = (id) => {
-        if(confirm("確定要刪除這個單品嗎？")) {
-            setWardrobe(prev => prev.filter(item => item.id !== id));
-            showToast('🗑️ 單品已刪除');
-        }
-      };
+               // 若開啟自動模式且模型準備好，就在「本機端」執行圖片辨識
+               if (isAutoMode && aiModel) {
+                  try {
+                     const img = new Image();
+                     img.src = item.url;
+                     await new Promise(r => { img.onload = r; img.onerror = r; });
 
-      const updateItemCategory = (id, newType) => {
-          setWardrobe(prev => prev.map(item => {
-              if (item.id === id) {
-                 return { ...item, type: newType, name: typeLabels[newType] || '單品' };
-              }
-              return item;
-          }));
-          showToast(`✨ 單品分類已成功修改為：${typeLabels[newType]}`);
-      };
+                     const preds = await aiModel.classify(img);
+                     const combinedString = preds.map(p => p.className.toLowerCase()).join(" ");
 
-      const getBase64FromUrl = async (url) => {
-        return new Promise((resolve) => {
-          const img = new Image();
-          if (!url.startsWith('blob:') && !url.startsWith('data:')) {
-             img.crossOrigin = 'Anonymous';
-          }
-          img.onload = () => {
-             const canvas = document.createElement('canvas');
-             const maxD = 512;
-             let w = img.width, h = img.height;
-             if (w > h && w > maxD) { h *= maxD / w; w = maxD; }
-             else if (h > maxD) { w *= maxD / h; h = maxD; }
-             canvas.width = w; canvas.height = h;
-             const ctx = canvas.getContext('2d');
-             ctx.drawImage(img, 0, 0, w, h);
-             resolve(canvas.toDataURL('image/jpeg', 0.8).split(',')[1]);
-          };
-          img.onerror = () => resolve(null);
-          img.src = url;
-        });
-      };
+                     // 簡易特徵字詞對應
+                     if (combinedString.includes("shoe") || combinedString.includes("sneaker") || combinedString.includes("boot") || combinedString.includes("sandal") || combinedString.includes("footwear")) finalCategory = 'shoes';
+                     else if (combinedString.includes("bag") || combinedString.includes("purse") || combinedString.includes("backpack") || combinedString.includes("satchel")) finalCategory = 'bag';
+                     else if (combinedString.includes("skirt")) finalCategory = 'skirt';
+                     else if (combinedString.includes("dress") || combinedString.includes("gown") || combinedString.includes("robe") || combinedString.includes("pajama")) finalCategory = 'dress';
+                     else if (combinedString.includes("jean") || combinedString.includes("trouser") || combinedString.includes("pant") || combinedString.includes("short") || combinedString.includes("denim") || combinedString.includes("sweatpant")) finalCategory = 'pants';
+                     else finalCategory = 'top'; //  fallback for shirts, suits, etc.
 
-      const generateVirtualTryOn = async (outfitObj = currentOutfit) => {
-         if(!outfitObj || isGeneratingModel) return;
-         setIsGeneratingModel(true);
-         // 保留舊照，只顯示 Loading
-         showToast("✨ AI 正在為您光速生成裝扮，請稍候...");
-         setViewMode('model'); // 強制切換到人台視角展示
-         try {
-            const parts = [];
-            const addPart = async (item) => {
-               if(item && item.imageUrl) {
-                  const b64 = await getBase64FromUrl(item.imageUrl);
-                  if(b64) parts.push({ inlineData: { data: b64, mimeType: 'image/jpeg' } });
+                  } catch (e) {
+                     console.warn("AI 預測異常，轉為預設分類:", e);
+                  }
+               } else {
+                  // 模擬處理時間特效
+                  await new Promise(r => setTimeout(r, 200));
                }
-            };
-            await addPart(outfitObj.top);
-            await addPart(outfitObj.bottom);
-            await addPart(outfitObj.dress);
-            await addPart(outfitObj.shoes);
-            await addPart(outfitObj.bag);
 
-            parts.push({ text: "你是專業的時尚設計師。請仔細觀察圖片中這套衣服（可能包含上著、下著、裙子、鞋子或包包等）。請為我寫一段用來生成 AI 圖片的「英文 Prompt（提示詞）」。Prompt 的開頭必須是：'A realistic 4k highly detailed fashion photography of a beautiful fashion model standing in a modern studio, wearing... [這裡寫衣服的精準英文描述，包含單品上的圖案、顏色、款式細節、材質等，以及鞋子背包]'。最後「只能回傳一句」這段英文 Prompt，不要包含任何其他解說。" });
-
-            // 前端不再寫死 API Key，直接打給 Cloudflare Worker (確保設定了 model 參數)
-            const controller = new AbortController();
-            const id = setTimeout(() => controller.abort(), 15000); // 15秒超時放棄
-            const response = await fetch(`https://ai-wardrobe-proxy.miachan.workers.dev/?model=gemini`, {
-               method: 'POST',
-               headers: { 'Content-Type': 'application/json' },
-               body: JSON.stringify({ contents: [{ parts }] }),
-               signal: controller.signal
-            });
-            clearTimeout(id);
-            
-            const data = await response.json();
-            if(data.error) throw new Error(data.error.message);
-            
-            if(!data.candidates || !data.candidates[0]) throw new Error("Gemini returned no prompt");
-            let prompt = data.candidates[0].content.parts[0].text.trim();
-            prompt = prompt.replace(/```[a-zA-Z]*\n?|\n?```/g, '').trim();
-            console.log("Gemini Generated Prompt:", prompt);
-            
-            // 透過免授權的 AI 生圖服務進行渲染
-            // 透過 Gemini (Imagen) 進行原生生圖
-            const fullPrompt = prompt + ", beautiful asian female model, identical face, consistent appearance, standing full body in a minimal bright modern studio, highly detailed fashion photography, 4k resolution, masterpiece";
-            
-            const imgReqBody = {
-               instances: [{ prompt: fullPrompt }],
-               parameters: { sampleCount: 1, aspectRatio: "3:4" }
-            };
-            
-            const imgResponse = await fetch(`https://ai-wardrobe-proxy.miachan.workers.dev/?model=imagen`, {
-               method: 'POST',
-               headers: { 'Content-Type': 'application/json' },
-               body: JSON.stringify(imgReqBody)
-            });
-            const imgData = await imgResponse.json();
-            
-            if(imgData.error) throw new Error(imgData.error.message);
-            if(!imgData.predictions || !imgData.predictions[0]) throw new Error("Imagen returned no image");
-            
-            const b64Image = `data:image/jpeg;base64,${imgData.predictions[0].bytesBase64Encoded}`;
-            
-            setGeneratedModelUrl(b64Image);
-            setIsGeneratingModel(false);
-            showToast("🎉 專屬模特兒已為您換上最新穿搭照！");
-
-         } catch(e) {
-            console.error("生成失敗:", e.message);
-            if(e.message.includes("paid plans")) {
-               showToast("⚠️ Gemini API 錯誤: 您的 API 密鑰是免費版，無法產圖！請升級 Google 付費計畫。");
-            } else {
-               showToast("⚠️ 模特兒生成失敗: " + e.message);
+               newItems.push({
+                  id: Math.random(), imageUrl: item.url, type: finalCategory, name: `${typeLabels[finalCategory] || '單品'}`,
+                  timestamp: Date.now()
+               });
+               setProcessQueue(prev => prev.map(p => p.id === item.id ? { ...p, status: 'done' } : p));
             }
-            setIsGeneratingModel(false);
-         }
-      };
 
-      // --- 抽籤與替換功能 ---
-      const generateOOTD = () => {
-        if (wardrobe.length === 0) { showToast("⚠️ 您的數位衣櫃目前是空的喔！前往導入吧"); setActiveTab('wardrobe'); return; }
-        setIsDrawing(true);
-        setCurrentOutfit(null);
-        setGeneratedModelUrl(null); // 清理之前的生成的模特兒
-        setTimeout(() => {
-          const filter = (t) => {
-            const list = wardrobe.filter(i => i.type === t);
-            return list.length ? list[Math.floor(Math.random() * list.length)] : null;
-          };
-          const dresses = wardrobe.filter(i => i.type === 'dress');
-          const isDress = (dresses.length > 0 && Math.random() > 0.5) || wardrobe.filter(i=>i.type==='top').length===0;
-          
-          let outfit = { bag: filter('bag'), shoes: filter('shoes') };
-          if (isDress && dresses.length > 0) {
-              outfit.dress = filter('dress');
-          } else {
-              outfit.top = filter('top');
-              outfit.bottom = filter('pants') || filter('skirt');
-          }
-          setCurrentOutfit(outfit);
-          setIsDrawing(false);
-          setActiveTab('planner');
-          generateVirtualTryOn(outfit); // 直接自動觸發
-        }, 800);
-      };
+            setTimeout(() => {
+               setWardrobe(prev => [...newItems, ...prev]);
+               setIsProcessingModalOpen(false);
+               setProcessQueue([]);
+               showToast('✨ 成功匯入 ' + newItems.length + ' 件單品至「' + typeLabels[selectedCategory] + '」分類！');
+            }, 1200);
 
-      const handleSwap = (slot) => {
-        if (isGeneratingModel) {
-            showToast("⏳ AI 模特兒努力生成中，請稍後再更換服裝...");
-            return;
-        }
-        const types = slot === 'bottom' ? ['pants', 'skirt'] : [slot];
-        const alts = wardrobe.filter(i => types.includes(i.type) && i.id !== currentOutfit[slot]?.id);
-        if (alts.length) {
-            const newOutfit = { ...currentOutfit, [slot]: alts[Math.floor(Math.random() * alts.length)] };
-            setCurrentOutfit(newOutfit);
-            setGeneratedModelUrl(null); // 手動換衣時清空模特兒
-            generateVirtualTryOn(newOutfit); // 自動刷新模特兒
-        }
-        else showToast(`沒有其他可替換的${typeLabels[types[0]]}單品了`);
-      };
+            event.target.value = ''; // Reset input
+         };
 
-      // --- RWD 導覽列 組件 ---
-      const NavItem = ({ id, icon, label }) => {
-        const isActive = activeTab === id;
-        return (
-          <button onClick={() => setActiveTab(id)} className={`flex items-center w-full px-4 py-3 md:py-4 md:px-6 transition-all duration-300 rounded-xl md:rounded-r-none md:rounded-l-2xl md:my-1 font-bold ${isActive ? 'bg-indigo-50 text-indigo-700 md:translate-x-4 shadow-[inset_0px_2px_10px_rgba(0,0,0,0.03)]' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'}`}>
-             <Icon name={icon} size={22} className={`md:mr-4 flex-shrink-0 ${isActive ? 'animate-bounce' : ''}`} />
-             <span className="hidden md:block tracking-wide">{label}</span>
-          </button>
-        )
-      };
+         const deleteItem = (id) => {
+            if (confirm("確定要刪除這個單品嗎？")) {
+               setWardrobe(prev => prev.filter(item => item.id !== id));
+               showToast('🗑️ 單品已刪除');
+            }
+         };
 
-      return (
-        <div className="flex flex-col md:flex-row h-[100dvh] w-full bg-[#f8fafc] text-slate-800 isolate">
-          
-          {/* 全域 Toast 提示 */}
-          {toastMsg && (
-            <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-slate-900/95 backdrop-blur-md text-white text-sm font-bold px-6 py-3 rounded-full shadow-2xl z-[100] animate-fade-in flex items-center gap-2 border border-slate-700">
-              {toastMsg}
-            </div>
-          )}
+         const updateItemCategory = (id, newType) => {
+            setWardrobe(prev => prev.map(item => {
+               if (item.id === id) {
+                  return { ...item, type: newType, name: typeLabels[newType] || '單品' };
+               }
+               return item;
+            }));
+            showToast(`✨ 單品分類已成功修改為：${typeLabels[newType]}`);
+         };
 
-          {/* 右上角快捷選單 (Desktop) */}
-          <div className="hidden md:flex absolute top-6 right-8 gap-4 z-50">
-             <button onClick={() => avatarInputRef.current.click()} className="w-10 h-10 rounded-full bg-white shadow-sm border border-slate-200 flex items-center justify-center hover:shadow-md transition-all overflow-hidden relative group">
-                {customAvatar ? <img src={customAvatar} className="w-full h-full object-cover" /> : <Icon name="user" size={18} className="text-slate-400 group-hover:text-indigo-600" />}
-             </button>
-             <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => {
-                  const f = e.target.files[0];
-                  if (f) { const rd = new FileReader(); rd.onload = (ev) => { setCustomAvatar(ev.target.result); showToast('✅ 頭像設定成功'); }; rd.readAsDataURL(f); }
-             }} />
-          </div>
+         const getBase64FromUrl = async (url) => {
+            return new Promise((resolve) => {
+               const img = new Image();
+               if (!url.startsWith('blob:') && !url.startsWith('data:')) {
+                  img.crossOrigin = 'Anonymous';
+               }
+               img.onload = () => {
+                  const canvas = document.createElement('canvas');
+                  const maxD = 512;
+                  let w = img.width, h = img.height;
+                  if (w > h && w > maxD) { h *= maxD / w; w = maxD; }
+                  else if (h > maxD) { w *= maxD / h; h = maxD; }
+                  canvas.width = w; canvas.height = h;
+                  const ctx = canvas.getContext('2d');
+                  ctx.drawImage(img, 0, 0, w, h);
+                  resolve(canvas.toDataURL('image/jpeg', 0.8).split(',')[1]);
+               };
+               img.onerror = () => resolve(null);
+               img.src = url;
+            });
+         };
 
-          {/* Desktop Sidebar */}
-          <aside className="hidden md:flex flex-col w-[260px] flex-shrink-0 bg-white border-r border-slate-100 shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-10 h-full overflow-y-auto hide-scroll pb-6">
-             <div className="p-8 pb-4 flex items-center gap-3 shrink-0">
-               <div className="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-200 shrink-0">
-                 <Icon name="shirt" size={20} />
+         const generateVirtualTryOn = async (outfitObj = currentOutfit) => {
+            if (!outfitObj || isGeneratingModel) return;
+            setIsGeneratingModel(true);
+            // 保留舊照，只顯示 Loading
+            showToast("✨ AI 正在為您光速生成裝扮，請稍候...");
+            setViewMode('model'); // 強制切換到人台視角展示
+            try {
+               const parts = [];
+               const addPart = async (item) => {
+                  if (item && item.imageUrl) {
+                     const b64 = await getBase64FromUrl(item.imageUrl);
+                     if (b64) parts.push({ inlineData: { data: b64, mimeType: 'image/jpeg' } });
+                  }
+               };
+               await addPart(outfitObj.top);
+               await addPart(outfitObj.bottom);
+               await addPart(outfitObj.dress);
+               await addPart(outfitObj.shoes);
+               await addPart(outfitObj.bag);
+
+               parts.push({ text: "你是專業的時尚設計師與 AI 提示詞專家。請仔細觀察圖片中這套衣服。請為我寫一段用來生成 AI 圖片的「英文 Prompt（提示詞）」。Prompt 的開頭必須是：'A realistic 4k highly detailed fashion photography of a beautiful fashion model standing in a modern studio, wearing... [這裡寫衣服的精準英文描述]'. ⚠️ 【極度重要任務】：你必須 100% 還原衣服的「精確顏色」(例如 navy blue, pastel pink)、「剪裁樣式」(例如 oversized sweater, high-waisted wide-leg denim)、「圖案與印花」(如果有文字或圖案，必須詳細描述並用引號標示) 以及「材質」(例如 silk, knitted, leather)。絕對不可以自己發揮或改變衣服的原本設計與樣貌！最後「只能回傳一句」這段完整的英文 Prompt，不要包含任何其他解說。" });
+
+               // 前端不再寫死 API Key，直接打給 Cloudflare Worker (確保設定了 model 參數)
+               const controller = new AbortController();
+               const id = setTimeout(() => controller.abort(), 15000); // 15秒超時放棄
+               const response = await fetch(`https://ai-wardrobe-proxy.miachan.workers.dev/?model=gemini`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ contents: [{ parts }] }),
+                  signal: controller.signal
+               });
+               clearTimeout(id);
+
+               const data = await response.json();
+               if (data.error) throw new Error(data.error.message);
+
+               if (!data.candidates || !data.candidates[0]) throw new Error("Gemini returned no prompt");
+               let prompt = data.candidates[0].content.parts[0].text.trim();
+               prompt = prompt.replace(/```[a-zA-Z]*\n?|\n?```/g, '').trim();
+               console.log("Gemini Generated Prompt:", prompt);
+
+               // 透過免授權的 AI 生圖服務進行渲染
+               // 透過 Gemini (Imagen) 進行原生生圖
+               const fullPrompt = prompt + ", exact colors preserved, perfectly matching the clothing reference, clothing details strictly maintained, beautiful asian female model, identical face, consistent appearance, standing full body in a minimal bright modern studio, highly detailed fashion photography, 4k resolution, masterpiece";
+
+               const imgReqBody = {
+                  instances: [{ prompt: fullPrompt }],
+                  parameters: { sampleCount: 1, aspectRatio: "3:4" }
+               };
+
+               const imgResponse = await fetch(`https://ai-wardrobe-proxy.miachan.workers.dev/?model=imagen`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(imgReqBody)
+               });
+               const imgData = await imgResponse.json();
+
+               if (imgData.error) throw new Error(imgData.error.message);
+               if (!imgData.predictions || !imgData.predictions[0]) throw new Error("Imagen returned no image");
+
+               const b64Image = `data:image/jpeg;base64,${imgData.predictions[0].bytesBase64Encoded}`;
+
+               setGeneratedModelUrl(b64Image);
+               setIsGeneratingModel(false);
+               showToast("🎉 專屬模特兒已為您換上最新穿搭照！");
+
+            } catch (e) {
+               console.error("生成失敗:", e.message);
+               if (e.message.includes("paid plans")) {
+                  showToast("⚠️ Gemini API 錯誤: 您的 API 密鑰是免費版，無法產圖！請升級 Google 付費計畫。");
+               } else {
+                  showToast("⚠️ 模特兒生成失敗: " + e.message);
+               }
+               setIsGeneratingModel(false);
+            }
+         };
+
+         // --- 抽籤與替換功能 ---
+         const generateOOTD = () => {
+            if (wardrobe.length === 0) { showToast("⚠️ 您的數位衣櫃目前是空的喔！前往導入吧"); setActiveTab('wardrobe'); return; }
+            setIsDrawing(true);
+            // setCurrentOutfit(null);
+            // setGeneratedModelUrl(null); // 清理之前的生成的模特兒
+            setTimeout(() => {
+               const filter = (t) => {
+                  const list = wardrobe.filter(i => i.type === t);
+                  return list.length ? list[Math.floor(Math.random() * list.length)] : null;
+               };
+               const dresses = wardrobe.filter(i => i.type === 'dress');
+               const isDress = (dresses.length > 0 && Math.random() > 0.5) || wardrobe.filter(i => i.type === 'top').length === 0;
+
+               let outfit = { bag: filter('bag'), shoes: filter('shoes') };
+               if (isDress && dresses.length > 0) {
+                  outfit.dress = filter('dress');
+               } else {
+                  outfit.top = filter('top');
+                  outfit.bottom = filter('pants') || filter('skirt');
+               }
+               setCurrentOutfit(outfit);
+               setIsDrawing(false);
+               setActiveTab('planner');
+               generateVirtualTryOn(outfit); // 直接自動觸發
+            }, 800);
+         };
+
+         const handleSwap = (slot) => {
+            if (isGeneratingModel) {
+               showToast("⏳ AI 模特兒努力生成中，請稍後再更換服裝...");
+               return;
+            }
+            const types = slot === 'bottom' ? ['pants', 'skirt'] : [slot];
+            const alts = wardrobe.filter(i => types.includes(i.type) && i.id !== currentOutfit[slot]?.id);
+            if (alts.length) {
+               const newOutfit = { ...currentOutfit, [slot]: alts[Math.floor(Math.random() * alts.length)] };
+               setCurrentOutfit(newOutfit);
+               // setGeneratedModelUrl(null); // 手動換衣時不再清空，保留舊圖作過場
+               generateVirtualTryOn(newOutfit); // 自動刷新模特兒
+            }
+            else showToast(`沒有其他可替換的${typeLabels[types[0]]}單品了`);
+         };
+
+         // --- RWD 導覽列 組件 ---
+         const NavItem = ({ id, icon, label }) => {
+            const isActive = activeTab === id;
+            return (
+               <button onClick={() => setActiveTab(id)} className={`flex items-center w-full px-4 py-3 md:py-4 md:px-6 transition-all duration-300 rounded-xl md:rounded-r-none md:rounded-l-2xl md:my-1 font-bold ${isActive ? 'bg-indigo-50 text-indigo-700 md:translate-x-4 shadow-[inset_0px_2px_10px_rgba(0,0,0,0.03)]' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'}`}>
+                  <Icon name={icon} size={22} className={`md:mr-4 flex-shrink-0 ${isActive ? 'animate-bounce' : ''}`} />
+                  <span className="hidden md:block tracking-wide">{label}</span>
+               </button>
+            )
+         };
+
+         return (
+            <div className="flex flex-col md:flex-row h-[100dvh] w-full bg-[#f8fafc] text-slate-800 isolate">
+
+               {/* 全域 Toast 提示 */}
+               {toastMsg && (
+                  <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-slate-900/95 backdrop-blur-md text-white text-sm font-bold px-6 py-3 rounded-full shadow-2xl z-[100] animate-fade-in flex items-center gap-2 border border-slate-700">
+                     {toastMsg}
+                  </div>
+               )}
+
+               {/* 右上角快捷選單 (Desktop) */}
+               <div className="hidden md:flex absolute top-6 right-8 gap-4 z-50">
+                  <button onClick={() => avatarInputRef.current.click()} className="w-10 h-10 rounded-full bg-white shadow-sm border border-slate-200 flex items-center justify-center hover:shadow-md transition-all overflow-hidden relative group">
+                     {customAvatar ? <img src={customAvatar} className="w-full h-full object-cover" /> : <Icon name="user" size={18} className="text-slate-400 group-hover:text-indigo-600" />}
+                  </button>
+                  <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => {
+                     const f = e.target.files[0];
+                     if (f) { const rd = new FileReader(); rd.onload = (ev) => { setCustomAvatar(ev.target.result); showToast('✅ 頭像設定成功'); }; rd.readAsDataURL(f); }
+                  }} />
                </div>
-               <div className="min-w-0">
-                  <h1 className="text-lg font-black tracking-wider text-slate-900 leading-tight truncate">WARDROBE</h1>
-                  <p className="text-[9px] text-indigo-500 font-bold uppercase tracking-widest truncate">Digital Closet</p>
-               </div>
-             </div>
-             
-             <nav className="mt-6 flex flex-col pl-4 gap-2 shrink-0">
-               <NavItem id="planner" icon="sparkles" label="穿搭搭配畫布" />
-               <NavItem id="wardrobe" icon="grid" label="數位衣櫃庫" />
-               <NavItem id="favorites" icon="heart" label="我的穿搭日記" />
-             </nav>
-             
-             <div className="px-6 py-4 shrink-0 mt-auto">
-                <div className="bg-slate-50 px-4 py-3 rounded-2xl border border-slate-100 flex flex-col items-start gap-1">
-                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">衣櫃總件數</p>
-                   <p className="text-xl font-black text-slate-800 leading-none">{wardrobe.length} <span className="text-xs text-slate-500">件</span></p>
-                </div>
-             </div>
 
-             {/* 廣告推薦區塊 (左側欄位底) */}
-             <div className="px-6 pb-6 shrink-0 mt-4">
-                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-1.5 border-t border-slate-100 pt-5">
-                    <Icon name="sparkles" size={12} /> 獨家推薦遊戲
-                </h3>
-                <div className="flex flex-col gap-3">
-                   <a href="https://cmj2.com.tw/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center py-4 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 border border-slate-200 bg-slate-50 relative group">
-                      <img src="./pic_cmj2.png" alt="CMJ2" className="w-[50%] h-auto object-contain group-hover:scale-105 transition-transform duration-500" />
-                   </a>
-                   <a href="https://www.gametower.com.tw/Games/FreePlay/Mj/star31/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center py-4 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 border border-slate-200 bg-slate-50 relative group">
-                      <img src="./pic_iStar31.png" alt="Star31" className="w-[50%] h-auto object-contain group-hover:scale-105 transition-transform duration-500" />
-                   </a>
-                   <a href="https://www.gametower.com.tw/Games/PG/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center py-4 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 border border-slate-200 bg-slate-50 relative group">
-                      <img src="./pic_pg.png" alt="PG" className="w-[50%] h-auto object-contain group-hover:scale-105 transition-transform duration-500" />
-                   </a>
-                </div>
-             </div>
-          </aside>
+               {/* Desktop Sidebar */}
+               <aside className="hidden md:flex flex-col w-[260px] flex-shrink-0 bg-white border-r border-slate-100 shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-10 h-full overflow-y-auto hide-scroll pb-6">
+                  <div className="p-8 pb-4 flex items-center gap-3 shrink-0">
+                     <div className="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-200 shrink-0">
+                        <Icon name="shirt" size={20} />
+                     </div>
+                     <div className="min-w-0">
+                        <h1 className="text-lg font-black tracking-wider text-slate-900 leading-tight truncate">WARDROBE</h1>
+                        <p className="text-[9px] text-indigo-500 font-bold uppercase tracking-widest truncate">Digital Closet</p>
+                     </div>
+                  </div>
 
-          {/* Main Workspace */}
-          <main className="flex-1 flex flex-col h-full relative overflow-y-auto hide-scroll">
-            
-            {/* Mobile Header */}
-            <header className="md:hidden bg-white px-5 py-4 border-b border-slate-100 flex justify-between items-center sticky top-0 z-40">
-               <div className="flex items-center gap-2">
-                 <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-200">
-                   <Icon name="shirt" size={16} />
-                 </div>
-                 <h1 className="text-base font-black tracking-wider text-slate-900">WARDROBE</h1>
-               </div>
-               <div className="flex gap-3 relative">
-                 <button onClick={() => avatarInputRef.current.click()} className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200">
-                   {customAvatar ? <img src={customAvatar} className="w-full h-full object-cover" /> : <Icon name="user" size={14} className="text-slate-400" />}
-                 </button>
-               </div>
-            </header>
+                  <nav className="mt-6 flex flex-col pl-4 gap-2 shrink-0">
+                     <NavItem id="planner" icon="sparkles" label="穿搭搭配畫布" />
+                     <NavItem id="wardrobe" icon="grid" label="數位衣櫃庫" />
+                     <NavItem id="favorites" icon="heart" label="我的穿搭日記" />
+                  </nav>
 
-            <div className="flex-1 p-4 md:p-8 lg:p-10 w-full max-w-[1600px] mx-auto overflow-x-hidden">
-               
-               {/* View: Planner (穿搭畫布) */}
-               {activeTab === 'planner' && (
-                 <div className="h-full flex flex-col lg:flex-row gap-6 lg:gap-8 min-h-[600px] animate-fade-in">
-                    
-                    {/* Left Settings Panel */}
-                    <div className="w-full lg:w-[320px] flex-shrink-0 flex flex-col gap-6">
-                       <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100/60">
-                          <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                            <Icon name="sun" size={16} /> 情境設定參數
-                          </h2>
-                          <div className="space-y-5">
-                             <div>
-                               <label className="text-xs font-bold text-slate-500 mb-2 block">氣候溫度</label>
-                               <div className="flex gap-2">
-                                 {['warm', 'sunny', 'cold'].map(w => (
-                                   <button key={w} onClick={() => setWeather(w)} className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all border ${weather === w ? 'bg-indigo-50 border-indigo-200 text-indigo-700 shadow-sm' : 'bg-white border-slate-100 text-slate-500 hover:bg-slate-50'}`}>{w === 'warm' ? '舒適' : w === 'sunny' ? '炎熱' : '寒冷'}</button>
-                                 ))}
-                               </div>
-                             </div>
-                             <div>
-                               <label className="text-xs font-bold text-slate-500 mb-2 block">出席場合</label>
-                               <div className="flex gap-2">
-                                 {['work', 'casual', 'date'].map(o => (
-                                   <button key={o} onClick={() => setOccasion(o)} className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all border ${occasion === o ? 'bg-pink-50 border-pink-200 text-pink-600 shadow-sm' : 'bg-white border-slate-100 text-slate-500 hover:bg-slate-50'}`}>{o === 'work' ? '工作' : o === 'casual' ? '休閒' : '約會'}</button>
-                                 ))}
-                               </div>
-                             </div>
-                          </div>
-                       </div>
-                       
-                       <button onClick={generateOOTD} disabled={isDrawing} className={`w-full py-5 rounded-3xl text-white font-black text-lg transition-all flex items-center justify-center gap-3 shadow-xl ${isDrawing ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] animate-pulse-glow hover:animate-none'}`}>
-                          {isDrawing ? <Icon name="rotate" className="animate-spin" size={24} /> : <Icon name="sparkles" size={24} />}
-                          {isDrawing ? "匹配單品中..." : "開始隨機穿搭配對"}
-                       </button>
+                  <div className="px-6 py-4 shrink-0 mt-auto">
+                     <div className="bg-slate-50 px-4 py-3 rounded-2xl border border-slate-100 flex flex-col items-start gap-1">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">衣櫃總件數</p>
+                        <p className="text-xl font-black text-slate-800 leading-none">{wardrobe.length} <span className="text-xs text-slate-500">件</span></p>
+                     </div>
+                  </div>
 
-                       {/* Output Status & Save Button */}
-                       <div className={`transition-all duration-500 ${currentOutfit ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
-                          <button onClick={() => { setSavedOutfits(p => [{ id: Date.now(), outfit: currentOutfit, date: new Date().toLocaleDateString() }, ...p]); showToast('💖 已存入個人日記'); }} className="w-full py-4 bg-slate-900 hover:bg-black text-white rounded-3xl font-bold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all">
-                             <Icon name="heart" size={18} /> 儲存至穿搭筆記本
-                          </button>
-                       </div>
-                    </div>
+                  {/* 廣告推薦區塊 (左側欄位底) */}
+                  <div className="px-6 pb-6 shrink-0 mt-4">
+                     <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-1.5 border-t border-slate-100 pt-5">
+                        <Icon name="sparkles" size={12} /> 獨家推薦遊戲
+                     </h3>
+                     <div className="flex flex-col gap-3">
+                        <a href="https://cmj2.com.tw/?utm_source=ai-wardrobe&utm_medium=display&utm_campaign=mega_traffic_2026&utm_content=1st_banner" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center py-4 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 border border-slate-200 bg-slate-50 relative group">
+                           <img src="./pic_cmj2.png" alt="CMJ2" className="w-[50%] h-auto object-contain group-hover:scale-105 transition-transform duration-500" />
+                        </a>
+                        <a href="https://www.gametower.com.tw/Games/FreePlay/Mj/star31?utm_source=ai-wardrobe&utm_medium=display&utm_campaign=mega_traffic_2026&utm_content=2nd_banner" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center py-4 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 border border-slate-200 bg-slate-50 relative group">
+                           <img src="./pic_iStar31.png" alt="Star31" className="w-[50%] h-auto object-contain group-hover:scale-105 transition-transform duration-500" />
+                        </a>
+                        <a href="https://www.gametower.com.tw/Games/PG?utm_source=ai-wardrobe&utm_medium=display&utm_campaign=mega_traffic_2026&utm_content=3rd_banner" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center py-4 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 border border-slate-200 bg-slate-50 relative group">
+                           <img src="./pic_pg.png" alt="PG" className="w-[50%] h-auto object-contain group-hover:scale-105 transition-transform duration-500" />
+                        </a>
+                     </div>
+                  </div>
+               </aside>
 
-                    {/* Right Canvas Panel */}
-                    <div className="flex-1 bg-white rounded-[2rem] shadow-sm border border-slate-100/60 overflow-hidden flex flex-col relative h-[65vh] lg:h-auto min-h-[500px]">
-                       
-                       {/* Canvas Header */}
-                       <div className="absolute top-4 left-4 right-4 md:left-6 md:right-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-2 z-[60] pointer-events-none">
-                          <div className="bg-white/80 backdrop-blur-md px-4 py-2 rounded-xl text-xs font-bold text-slate-500 border border-slate-100 shadow-sm pointer-events-auto">
-                             {currentOutfit ? '單擊服裝單品即可手動替換' : '等待生成指令...'}
-                          </div>
-                          {currentOutfit && (
-                             <div className="flex flex-wrap items-center gap-2 pointer-events-auto">
-                               <button onClick={generateVirtualTryOn} disabled={isGeneratingModel} className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl shadow-md transition-all ${isGeneratingModel ? 'bg-indigo-300 text-white cursor-not-allowed hidden md:flex' : 'bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white hover:scale-105 active:scale-95'}`}>
-                                  {isGeneratingModel ? <Icon name="rotate" className="animate-spin" size={14} /> : <Icon name="wand" size={14} />}
-                                  <span className="hidden sm:inline">{isGeneratingModel ? '加載中...' : '生成 AI 實穿照'}</span>
-                                  <span className="sm:hidden">{isGeneratingModel ? '加載中...' : 'AI實穿'}</span>
-                               </button>
-                               <div className="flex bg-white/90 backdrop-blur-sm p-1.5 rounded-2xl shadow-sm border border-slate-100 gap-1">
-                                 <button onClick={() => setViewMode('model')} className={`px-3 py-1.5 text-xs font-bold rounded-xl transition ${viewMode === 'model' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-400 hover:bg-slate-50'}`}>人台</button>
-                                 <button onClick={() => setViewMode('grid')} className={`px-3 py-1.5 text-xs font-bold rounded-xl transition ${viewMode === 'grid' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-400 hover:bg-slate-50'}`}>平鋪</button>
-                               </div>
-                             </div>
-                          )}
-                       </div>
+               {/* Main Workspace */}
+               <main className="flex-1 flex flex-col h-full relative overflow-y-auto hide-scroll">
 
-                       {/* Canvas Area */}
-                       <div className="flex-1 bg-checkerboard relative flex items-center justify-center w-full">
-                          {!currentOutfit && !isDrawing && (
-                             <div className="text-center text-slate-300 flex flex-col items-center">
-                                <Icon name="shirt" size={64} className="mb-4 opacity-50" />
-                                <p className="font-bold tracking-widest uppercase">CANVAS IS EMPTY</p>
-                             </div>
-                          )}
+                  {/* Mobile Header */}
+                  <header className="md:hidden bg-white px-5 py-4 border-b border-slate-100 flex justify-between items-center sticky top-0 z-40">
+                     <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-200">
+                           <Icon name="shirt" size={16} />
+                        </div>
+                        <h1 className="text-base font-black tracking-wider text-slate-900">WARDROBE</h1>
+                     </div>
+                     <div className="flex gap-3 relative">
+                        <button onClick={() => avatarInputRef.current.click()} className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200">
+                           {customAvatar ? <img src={customAvatar} className="w-full h-full object-cover" /> : <Icon name="user" size={14} className="text-slate-400" />}
+                        </button>
+                     </div>
+                  </header>
 
-                          {isDrawing && (
-                             <div className="text-indigo-500 flex flex-col items-center animate-pulse">
-                                <Icon name="wand" size={48} className="mb-4 animate-bounce" />
-                                <p className="font-bold tracking-widest uppercase">GENERATING...</p>
-                             </div>
-                          )}
+                  <div className="flex-1 p-4 md:p-8 lg:p-10 w-full max-w-[1600px] mx-auto overflow-x-hidden">
 
-                          {currentOutfit && !isDrawing && viewMode === 'model' && (
-                             <div className="relative w-full max-w-[400px] h-full max-h-[700px] flex items-center justify-center animate-fade-in my-10 mt-16 md:mt-10">
-                                 {generatedModelUrl && (
-                                    <div className="absolute inset-0 w-[110%] md:w-[120%] h-[110%] -left-[5%] md:-left-[10%] -top-[5%] z-50 flex items-center justify-center bg-white/80 backdrop-blur-md rounded-[2rem] p-4 animate-fade-in shadow-2xl border border-slate-100 group">
-                                       <img src={generatedModelUrl} className={`w-full h-full object-contain filter drop-shadow-xl rounded-[1.5rem] transition-all duration-700 ${isGeneratingModel ? 'blur-md opacity-60 scale-95' : 'blur-0 opacity-100 scale-100'}`} />
-                                       
-                                       {isGeneratingModel && (
-                                          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-indigo-600 bg-white/30 backdrop-blur-sm rounded-[1.5rem] m-4">
-                                            <Icon name="wand" size={32} className="animate-pulse mb-3" />
-                                            <span className="font-bold tracking-widest text-xs bg-white/80 px-4 py-2 rounded-full shadow-sm">正在直接為您換上...</span>
-                                          </div>
-                                       )}
+                     {/* View: Planner (穿搭畫布) */}
+                     {activeTab === 'planner' && (
+                        <div className="h-full flex flex-col lg:flex-row gap-6 lg:gap-8 min-h-[600px] animate-fade-in">
 
-                                       {!isGeneratingModel && (
-                                          <div className="absolute bottom-10 right-10 flex flex-col gap-2 z-20">
-                                             {currentOutfit.top && <button onClick={() => handleSwap('top')} className="bg-white/90 hover:bg-indigo-50 text-indigo-700 backdrop-blur-md px-4 py-2 rounded-full text-xs font-black shadow-lg shadow-indigo-200/50 hover:-translate-x-1 transition-transform border border-indigo-100">更換上衣</button>}
-                                             {currentOutfit.bottom && <button onClick={() => handleSwap('bottom')} className="bg-white/90 hover:bg-indigo-50 text-indigo-700 backdrop-blur-md px-4 py-2 rounded-full text-xs font-black shadow-lg shadow-indigo-200/50 hover:-translate-x-1 transition-transform border border-indigo-100">更換下身</button>}
-                                             {currentOutfit.dress && <button onClick={() => handleSwap('dress')} className="bg-white/90 hover:bg-indigo-50 text-indigo-700 backdrop-blur-md px-4 py-2 rounded-full text-xs font-black shadow-lg shadow-indigo-200/50 hover:-translate-x-1 transition-transform border border-indigo-100">更換連身</button>}
-                                             {currentOutfit.bag && <button onClick={() => handleSwap('bag')} className="bg-white/90 hover:bg-indigo-50 text-indigo-700 backdrop-blur-md px-4 py-2 rounded-full text-xs font-black shadow-lg shadow-indigo-200/50 hover:-translate-x-1 transition-transform border border-indigo-100">更換包包</button>}
-                                          </div>
-                                       )}
+                           {/* Left Settings Panel */}
+                           <div className="w-full lg:w-[320px] flex-shrink-0 flex flex-col gap-6">
+                              <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100/60">
+                                 <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                    <Icon name="sun" size={16} /> 情境設定參數
+                                 </h2>
+                                 <div className="space-y-5">
+                                    <div>
+                                       <label className="text-xs font-bold text-slate-500 mb-2 block">氣候溫度</label>
+                                       <div className="flex gap-2">
+                                          {['warm', 'sunny', 'cold'].map(w => (
+                                             <button key={w} onClick={() => setWeather(w)} className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all border ${weather === w ? 'bg-indigo-50 border-indigo-200 text-indigo-700 shadow-sm' : 'bg-white border-slate-100 text-slate-500 hover:bg-slate-50'}`}>{w === 'warm' ? '舒適' : w === 'sunny' ? '炎熱' : '寒冷'}</button>
+                                          ))}
+                                       </div>
+                                    </div>
+                                    <div>
+                                       <label className="text-xs font-bold text-slate-500 mb-2 block">出席場合</label>
+                                       <div className="flex gap-2">
+                                          {['work', 'casual', 'date'].map(o => (
+                                             <button key={o} onClick={() => setOccasion(o)} className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all border ${occasion === o ? 'bg-pink-50 border-pink-200 text-pink-600 shadow-sm' : 'bg-white border-slate-100 text-slate-500 hover:bg-slate-50'}`}>{o === 'work' ? '工作' : o === 'casual' ? '休閒' : '約會'}</button>
+                                          ))}
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
 
-                                       <button onClick={() => setGeneratedModelUrl(null)} className="absolute top-8 right-8 bg-black/50 hover:bg-red-500 text-white p-2 md:p-3 rounded-full backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all z-50 shadow-lg hover:rotate-12">
-                                          <Icon name="trash" size={16} />
+                              <button onClick={generateOOTD} disabled={isDrawing} className={`w-full py-5 rounded-3xl text-white font-black text-lg transition-all flex items-center justify-center gap-3 shadow-xl ${isDrawing ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] animate-pulse-glow hover:animate-none'}`}>
+                                 {isDrawing ? <Icon name="rotate" className="animate-spin" size={24} /> : <Icon name="sparkles" size={24} />}
+                                 {isDrawing ? "匹配單品中..." : "開始隨機穿搭配對"}
+                              </button>
+
+                              {/* Output Status & Save Button */}
+                              <div className={`transition-all duration-500 ${currentOutfit ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
+                                 <button onClick={() => { setSavedOutfits(p => [{ id: Date.now(), outfit: currentOutfit, date: new Date().toLocaleDateString() }, ...p]); showToast('💖 已存入個人日記'); }} className="w-full py-4 bg-slate-900 hover:bg-black text-white rounded-3xl font-bold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all">
+                                    <Icon name="heart" size={18} /> 儲存至穿搭筆記本
+                                 </button>
+                              </div>
+                           </div>
+
+                           {/* Right Canvas Panel */}
+                           <div className="flex-1 bg-white rounded-[2rem] shadow-sm border border-slate-100/60 overflow-hidden flex flex-col relative h-[65vh] lg:h-auto min-h-[500px]">
+
+                              {/* Canvas Header */}
+                              <div className="absolute top-4 left-4 right-4 md:left-6 md:right-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-2 z-[60] pointer-events-none">
+                                 <div className="bg-white/80 backdrop-blur-md px-4 py-2 rounded-xl text-xs font-bold text-slate-500 border border-slate-100 shadow-sm pointer-events-auto">
+                                    {currentOutfit ? '單擊服裝單品即可手動替換' : '等待生成指令...'}
+                                 </div>
+                                 {currentOutfit && (
+                                    <div className="flex flex-wrap items-center gap-2 pointer-events-auto">
+                                       <button onClick={generateVirtualTryOn} disabled={isGeneratingModel} className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl shadow-md transition-all ${isGeneratingModel ? 'bg-indigo-300 text-white cursor-not-allowed hidden md:flex' : 'bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white hover:scale-105 active:scale-95'}`}>
+                                          {isGeneratingModel ? <Icon name="rotate" className="animate-spin" size={14} /> : <Icon name="wand" size={14} />}
+                                          <span className="hidden sm:inline">{isGeneratingModel ? '加載中...' : '生成 AI 實穿照'}</span>
+                                          <span className="sm:hidden">{isGeneratingModel ? '加載中...' : 'AI實穿'}</span>
                                        </button>
+                                       <div className="flex bg-white/90 backdrop-blur-sm p-1.5 rounded-2xl shadow-sm border border-slate-100 gap-1">
+                                          <button onClick={() => setViewMode('model')} className={`px-3 py-1.5 text-xs font-bold rounded-xl transition ${viewMode === 'model' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-400 hover:bg-slate-50'}`}>人台</button>
+                                          <button onClick={() => setViewMode('grid')} className={`px-3 py-1.5 text-xs font-bold rounded-xl transition ${viewMode === 'grid' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-400 hover:bg-slate-50'}`}>平鋪</button>
+                                       </div>
                                     </div>
                                  )}
-                                {/* Vector 人台 */}
-                                <svg className="absolute inset-0 w-full h-full text-slate-200 pointer-events-none drop-shadow-sm" viewBox="0 0 100 250" fill="currentColor">
-                                  <g><path d="M 33 48 Q 50 43 67 48 L 80 95 L 70 100 L 62 65 L 62 120 L 38 120 L 38 65 L 30 100 L 20 95 Z" /><path d="M 40 115 L 35 220 A 5 5 0 0 0 45 220 L 48 115 Z" /><path d="M 60 115 L 65 220 A 5 5 0 0 0 55 220 L 52 115 Z" /></g>
-                                </svg>
+                              </div>
 
-                                {currentOutfit.dress ? (
-                                  <img src={currentOutfit.dress.imageUrl} className="absolute top-[12%] w-[85%] h-[65%] object-contain z-20 cursor-pointer hover:scale-105 hover:-translate-y-2 hover:drop-shadow-2xl transition-all duration-300 drop-shadow-xl filter" onClick={() => handleSwap('dress')} title="點擊切換連身裙" />
-                                ) : (
-                                  <>
-                                    {currentOutfit.top ? (
-                                       <img src={currentOutfit.top.imageUrl} className="absolute top-[14%] w-[80%] h-[40%] object-contain z-20 cursor-pointer hover:scale-105 hover:-translate-y-2 hover:drop-shadow-2xl transition-all duration-300 drop-shadow-xl filter" onClick={() => handleSwap('top')} title="點擊切換上衣" />
-                                    ) : (
-                                       <div className="absolute top-[14%] w-[80%] h-[40%] border-4 border-dashed border-slate-200 bg-white/20 backdrop-blur-sm rounded-[2rem] flex flex-col gap-2 items-center justify-center z-20 cursor-pointer hover:bg-slate-50/50 hover:border-indigo-300 transition-all shadow-sm" onClick={() => handleSwap('top')} title="點此加回上衣">
-                                          <Icon name="plus" size={24} className="text-slate-300" />
-                                          <p className="text-slate-400 font-bold tracking-widest text-xs">空缺上衣</p>
+                              {/* Canvas Area */}
+                              <div className="flex-1 bg-checkerboard relative flex items-center justify-center w-full">
+                                 {!currentOutfit && !isDrawing && (
+                                    <div className="text-center text-slate-300 flex flex-col items-center">
+                                       <Icon name="shirt" size={64} className="mb-4 opacity-50" />
+                                       <p className="font-bold tracking-widest uppercase">CANVAS IS EMPTY</p>
+                                    </div>
+                                 )}
+
+                                 {isDrawing && (
+                                    <div className="text-indigo-500 flex flex-col items-center animate-pulse">
+                                       <Icon name="wand" size={48} className="mb-4 animate-bounce" />
+                                       <p className="font-bold tracking-widest uppercase">GENERATING...</p>
+                                    </div>
+                                 )}
+
+                                 {currentOutfit && !isDrawing && viewMode === 'model' && (
+                                    <div className="relative w-full max-w-[400px] h-full max-h-[700px] flex items-center justify-center animate-fade-in my-10 mt-16 md:mt-10">
+                                       <div className="absolute inset-0 w-[110%] md:w-[120%] h-[110%] -left-[5%] md:-left-[10%] -top-[5%] z-50 flex items-center justify-center bg-white rounded-[2rem] p-4 animate-fade-in shadow-xl border border-slate-100 group overflow-hidden">
+                                          {generatedModelUrl ? (
+                                             <img src={generatedModelUrl} className={`w-full h-full object-cover filter rounded-[1.5rem] transition-all duration-700 ${isGeneratingModel ? 'blur-md opacity-60 scale-95' : 'blur-0 opacity-100 scale-100'}`} />
+                                          ) : (
+                                             <div className="w-full h-full bg-slate-50 rounded-[1.5rem] flex flex-col items-center justify-center text-slate-300">
+                                                <Icon name="user" size={64} className="mb-4 opacity-50" />
+                                                <p className="font-bold tracking-widest text-sm">等待 AI 生成專屬模特兒...</p>
+                                             </div>
+                                          )}
+
+                                          {isGeneratingModel && (
+                                             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-indigo-600 bg-white/40 backdrop-blur-md rounded-[1.5rem] m-4 transition-all">
+                                                <Icon name="wand" size={48} className="animate-pulse mb-4 drop-shadow-md" />
+                                                <span className="font-bold tracking-widest text-sm bg-white px-6 py-3 rounded-full shadow-lg text-indigo-700">正在直接為您換上...</span>
+                                             </div>
+                                          )}
+
+                                          {!isGeneratingModel && generatedModelUrl && (
+                                             <div className="absolute bottom-6 right-6 flex flex-col gap-2 z-20">
+                                                {currentOutfit.top && <button onClick={() => handleSwap('top')} className="bg-white/90 hover:bg-indigo-50 text-indigo-700 backdrop-blur-md px-4 py-2 rounded-full text-xs font-black shadow-lg shadow-indigo-200/50 hover:-translate-x-1 transition-transform border border-indigo-100">更換上衣</button>}
+                                                {currentOutfit.bottom && <button onClick={() => handleSwap('bottom')} className="bg-white/90 hover:bg-indigo-50 text-indigo-700 backdrop-blur-md px-4 py-2 rounded-full text-xs font-black shadow-lg shadow-indigo-200/50 hover:-translate-x-1 transition-transform border border-indigo-100">更換下身</button>}
+                                                {currentOutfit.dress && <button onClick={() => handleSwap('dress')} className="bg-white/90 hover:bg-indigo-50 text-indigo-700 backdrop-blur-md px-4 py-2 rounded-full text-xs font-black shadow-lg shadow-indigo-200/50 hover:-translate-x-1 transition-transform border border-indigo-100">更換連身</button>}
+                                                {currentOutfit.bag && <button onClick={() => handleSwap('bag')} className="bg-white/90 hover:bg-indigo-50 text-indigo-700 backdrop-blur-md px-4 py-2 rounded-full text-xs font-black shadow-lg shadow-indigo-200/50 hover:-translate-x-1 transition-transform border border-indigo-100">更換包包</button>}
+                                             </div>
+                                          )}
+
+                                          {!isGeneratingModel && generatedModelUrl && (
+                                             <button onClick={() => setGeneratedModelUrl(null)} className="absolute top-8 right-8 bg-black/50 hover:bg-red-500 text-white p-2 md:p-3 rounded-full backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all z-50 shadow-lg hover:rotate-12">
+                                                <Icon name="trash" size={16} />
+                                             </button>
+                                          )}
                                        </div>
-                                    )}
+                                    </div>
+                                 )}
 
-                                    {currentOutfit.bottom ? (
-                                       <img src={currentOutfit.bottom.imageUrl} className="absolute top-[42%] w-[75%] h-[48%] object-contain z-10 cursor-pointer hover:scale-105 hover:-translate-y-2 hover:drop-shadow-2xl transition-all duration-300 drop-shadow-xl filter" onClick={() => handleSwap('bottom')} title="點擊切換下身" />
-                                    ) : (
-                                       <div className="absolute top-[42%] w-[75%] h-[48%] border-4 border-dashed border-slate-200 bg-white/20 backdrop-blur-sm rounded-[2rem] flex flex-col gap-2 items-center justify-center z-10 cursor-pointer hover:bg-slate-50/50 hover:border-indigo-300 transition-all shadow-sm" onClick={() => handleSwap('bottom')} title="點此補上下著">
-                                          <Icon name="plus" size={24} className="text-slate-300" />
-                                          <p className="text-slate-400 font-bold tracking-widest text-xs">空缺下著</p>
-                                       </div>
-                                    )}
-                                  </>
-                                )}
-                                {currentOutfit.shoes ? (
-                                   <img src={currentOutfit.shoes.imageUrl} className="absolute bottom-[2%] w-[55%] h-[15%] object-contain z-30 cursor-pointer hover:scale-105 hover:-translate-y-1 hover:drop-shadow-2xl transition-all duration-300 drop-shadow-lg filter" onClick={() => handleSwap('shoes')} title="點擊切換鞋子" />
-                                ) : (
-                                   <div className="absolute bottom-[2%] w-[55%] h-[15%] border-2 border-dashed border-slate-200 rounded-xl flex items-center justify-center z-30 cursor-pointer hover:bg-slate-50 hover:border-indigo-300 transition-colors bg-white/50 backdrop-blur-sm shadow-sm" onClick={() => handleSwap('shoes')} title="點擊加上鞋子">
-                                      <p className="text-slate-400 font-bold text-[10px] tracking-widest">缺鞋子</p>
-                                   </div>
-                                )}
-                                
-                                {currentOutfit.bag ? (
-                                   <img src={currentOutfit.bag.imageUrl} className="absolute top-[35%] -right-[8%] w-[45%] h-[25%] object-contain z-40 cursor-pointer hover:scale-110 hover:rotate-6 hover:drop-shadow-2xl transition-all duration-300 drop-shadow-xl filter" onClick={() => handleSwap('bag')} title="點擊切換包包" />
-                                ) : (
-                                   <div className="absolute top-[35%] -right-[8%] w-[45%] h-[25%] border-2 border-dashed border-slate-200 rounded-3xl flex items-center justify-center z-40 cursor-pointer hover:bg-slate-50 hover:border-indigo-300 transition-colors bg-white/50 backdrop-blur-sm shadow-sm" onClick={() => handleSwap('bag')} title="點擊加上配件包">
-                                      <p className="text-slate-400 font-bold text-[10px] tracking-widest">+ 包包</p>
-                                   </div>
-                                )}
-                             </div>
-                          )}
+                                 {currentOutfit && !isDrawing && viewMode === 'grid' && (
+                                    <div className="w-full max-w-2xl px-8 grid grid-cols-2 gap-6 animate-fade-in my-auto">
+                                       {currentOutfit.top && <div className="aspect-square bg-slate-50 rounded-3xl p-6 flex items-center justify-center relative group cursor-pointer border border-slate-100 hover:border-indigo-300 hover:shadow-lg transition-all" onClick={() => handleSwap('top')}><span className="absolute top-4 left-4 text-[10px] font-black tracking-widest bg-white px-2 py-1 rounded-md text-slate-400 shadow-sm border border-slate-100">TOP</span><img src={currentOutfit.top.imageUrl} className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-110 transition-transform" /></div>}
+                                       {currentOutfit.dress && <div className="aspect-square bg-slate-50 rounded-3xl p-6 flex items-center justify-center relative group cursor-pointer border border-slate-100 hover:border-indigo-300 hover:shadow-lg transition-all row-span-2" onClick={() => handleSwap('dress')}><span className="absolute top-4 left-4 text-[10px] font-black tracking-widest bg-white px-2 py-1 rounded-md text-slate-400 shadow-sm border border-slate-100">DRESS</span><img src={currentOutfit.dress.imageUrl} className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-105 transition-transform" /></div>}
+                                       {currentOutfit.bottom && <div className="aspect-square bg-slate-50 rounded-3xl p-6 flex items-center justify-center relative group cursor-pointer border border-slate-100 hover:border-indigo-300 hover:shadow-lg transition-all" onClick={() => handleSwap('bottom')}><span className="absolute top-4 left-4 text-[10px] font-black tracking-widest bg-white px-2 py-1 rounded-md text-slate-400 shadow-sm border border-slate-100">BOTTOM</span><img src={currentOutfit.bottom.imageUrl} className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-110 transition-transform" /></div>}
+                                       {currentOutfit.bag && <div className="aspect-square bg-slate-50 rounded-3xl p-6 flex items-center justify-center relative group cursor-pointer border border-slate-100 hover:border-indigo-300 hover:shadow-lg transition-all" onClick={() => handleSwap('bag')}><span className="absolute top-4 left-4 text-[10px] font-black tracking-widest bg-white px-2 py-1 rounded-md text-slate-400 shadow-sm border border-slate-100">BAG</span><img src={currentOutfit.bag.imageUrl} className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-110 transition-transform" /></div>}
+                                       {currentOutfit.shoes && <div className="aspect-square bg-slate-50 rounded-3xl p-6 flex items-center justify-center relative group cursor-pointer border border-slate-100 hover:border-indigo-300 hover:shadow-lg transition-all" onClick={() => handleSwap('shoes')}><span className="absolute top-4 left-4 text-[10px] font-black tracking-widest bg-white px-2 py-1 rounded-md text-slate-400 shadow-sm border border-slate-100">SHOES</span><img src={currentOutfit.shoes.imageUrl} className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-110 transition-transform" /></div>}
+                                    </div>
+                                 )}
+                              </div>
+                           </div>
+                        </div>
+                     )}
 
-                          {currentOutfit && !isDrawing && viewMode === 'grid' && (
-                             <div className="w-full max-w-2xl px-8 grid grid-cols-2 gap-6 animate-fade-in my-auto">
-                               {currentOutfit.top && <div className="aspect-square bg-slate-50 rounded-3xl p-6 flex items-center justify-center relative group cursor-pointer border border-slate-100 hover:border-indigo-300 hover:shadow-lg transition-all" onClick={() => handleSwap('top')}><span className="absolute top-4 left-4 text-[10px] font-black tracking-widest bg-white px-2 py-1 rounded-md text-slate-400 shadow-sm border border-slate-100">TOP</span><img src={currentOutfit.top.imageUrl} className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-110 transition-transform" /></div>}
-                               {currentOutfit.dress && <div className="aspect-square bg-slate-50 rounded-3xl p-6 flex items-center justify-center relative group cursor-pointer border border-slate-100 hover:border-indigo-300 hover:shadow-lg transition-all row-span-2" onClick={() => handleSwap('dress')}><span className="absolute top-4 left-4 text-[10px] font-black tracking-widest bg-white px-2 py-1 rounded-md text-slate-400 shadow-sm border border-slate-100">DRESS</span><img src={currentOutfit.dress.imageUrl} className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-105 transition-transform" /></div>}
-                               {currentOutfit.bottom && <div className="aspect-square bg-slate-50 rounded-3xl p-6 flex items-center justify-center relative group cursor-pointer border border-slate-100 hover:border-indigo-300 hover:shadow-lg transition-all" onClick={() => handleSwap('bottom')}><span className="absolute top-4 left-4 text-[10px] font-black tracking-widest bg-white px-2 py-1 rounded-md text-slate-400 shadow-sm border border-slate-100">BOTTOM</span><img src={currentOutfit.bottom.imageUrl} className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-110 transition-transform" /></div>}
-                               {currentOutfit.bag && <div className="aspect-square bg-slate-50 rounded-3xl p-6 flex items-center justify-center relative group cursor-pointer border border-slate-100 hover:border-indigo-300 hover:shadow-lg transition-all" onClick={() => handleSwap('bag')}><span className="absolute top-4 left-4 text-[10px] font-black tracking-widest bg-white px-2 py-1 rounded-md text-slate-400 shadow-sm border border-slate-100">BAG</span><img src={currentOutfit.bag.imageUrl} className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-110 transition-transform" /></div>}
-                               {currentOutfit.shoes && <div className="aspect-square bg-slate-50 rounded-3xl p-6 flex items-center justify-center relative group cursor-pointer border border-slate-100 hover:border-indigo-300 hover:shadow-lg transition-all" onClick={() => handleSwap('shoes')}><span className="absolute top-4 left-4 text-[10px] font-black tracking-widest bg-white px-2 py-1 rounded-md text-slate-400 shadow-sm border border-slate-100">SHOES</span><img src={currentOutfit.shoes.imageUrl} className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-110 transition-transform" /></div>}
-                             </div>
-                          )}
-                       </div>
-                    </div>
-                 </div>
-               )}
+                     {/* View: Wardrobe (數位衣櫃庫) */}
+                     {activeTab === 'wardrobe' && (
+                        <div className="space-y-6 animate-fade-in pb-20 md:pb-0">
+                           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
+                              <div>
+                                 <h2 className="text-3xl font-black text-slate-900 tracking-tight">數位衣櫃資料庫</h2>
+                                 <p className="text-slate-500 mt-2 text-sm font-medium">手動上傳您的單品，並指派正確的分類版型。</p>
+                              </div>
 
-               {/* View: Wardrobe (數位衣櫃庫) */}
-               {activeTab === 'wardrobe' && (
-                 <div className="space-y-6 animate-fade-in pb-20 md:pb-0">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
-                       <div>
-                         <h2 className="text-3xl font-black text-slate-900 tracking-tight">數位衣櫃資料庫</h2>
-                         <p className="text-slate-500 mt-2 text-sm font-medium">手動上傳您的單品，並指派正確的分類版型。</p>
-                       </div>
-                       
-                       {/* 上傳介面，支援本地離線 AI 與純手動 */}
-                       <div className="w-full max-w-full md:w-auto flex flex-col xl:flex-row items-center gap-3 bg-white p-3 rounded-[2rem] border border-slate-200 shadow-sm relative z-20 hover:shadow-md transition-shadow shrink-0">
-                          {/* 模式切換按鈕 */}
-                          <div className="flex bg-slate-100 p-1.5 rounded-[1.5rem] relative shrink-0">
-                             <div className={`absolute left-1.5 top-1.5 bottom-1.5 w-[50%] bg-white rounded-[1rem] shadow-sm transition-transform duration-300 ${isAutoMode ? 'translate-x-[93%]' : 'translate-x-[5%]'}`}></div>
-                             <button onClick={() => setIsAutoMode(false)} className={`relative px-4 py-2 font-black text-[11px] rounded-[1rem] transition-colors z-10 whitespace-nowrap min-w-[90px] ${!isAutoMode ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}>手動選擇</button>
-                             <button onClick={() => setIsAutoMode(true)} className={`relative px-4 py-2 font-black text-[11px] rounded-[1rem] transition-colors flex justify-center items-center gap-1 z-10 whitespace-nowrap min-w-[90px] ${isAutoMode ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}>
-                               <Icon name="wand" size={12} className={isAutoMode ? 'animate-pulse' : ''} />
-                               AI 幫我分
-                             </button>
-                          </div>
-                          
-                          <div className="hidden xl:block w-[1px] h-10 bg-slate-200 mx-1 shrink-0"></div>
+                              {/* 上傳介面，支援本地離線 AI 與純手動 */}
+                              <div className="w-full max-w-full md:w-auto flex flex-col xl:flex-row items-center gap-3 bg-white p-3 rounded-[2rem] border border-slate-200 shadow-sm relative z-20 hover:shadow-md transition-shadow shrink-0">
+                                 {/* 模式切換按鈕 */}
+                                 <div className="flex bg-slate-100 p-1.5 rounded-[1.5rem] relative shrink-0">
+                                    <div className={`absolute left-1.5 top-1.5 bottom-1.5 w-[50%] bg-white rounded-[1rem] shadow-sm transition-transform duration-300 ${isAutoMode ? 'translate-x-[93%]' : 'translate-x-[5%]'}`}></div>
+                                    <button onClick={() => setIsAutoMode(false)} className={`relative px-4 py-2 font-black text-[11px] rounded-[1rem] transition-colors z-10 whitespace-nowrap min-w-[90px] ${!isAutoMode ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}>手動選擇</button>
+                                    <button onClick={() => setIsAutoMode(true)} className={`relative px-4 py-2 font-black text-[11px] rounded-[1rem] transition-colors flex justify-center items-center gap-1 z-10 whitespace-nowrap min-w-[90px] ${isAutoMode ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}>
+                                       <Icon name="wand" size={12} className={isAutoMode ? 'animate-pulse' : ''} />
+                                       AI 幫我分
+                                    </button>
+                                 </div>
 
-                          <div className={`flex flex-col items-start w-full xl:w-auto transition-opacity ${isAutoMode ? 'opacity-30 pointer-events-none' : 'opacity-100'}`}>
-                             <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-1">{isAutoMode ? '交給 AI 負責' : '上傳的分類是？'}</label>
-                             <div className="bg-slate-50 rounded-2xl border border-slate-100 px-3 md:px-4 py-2 w-full flex items-center shadow-inner ring-1 ring-transparent hover:ring-indigo-100 transition-all min-w-[120px]">
-                                <Icon name="category" size={16} className={`${isAutoMode ? 'text-slate-300' : 'text-indigo-400'} mr-2 shrink-0`} />
-                                <select id="upload-category" defaultValue="" className="w-full bg-transparent text-slate-700 font-bold outline-none cursor-pointer appearance-none text-sm">
-                                  <option value="" disabled>👉 點我選擇</option>
-                                  <option value="top">👕 上衣</option>
-                                  <option value="pants">👖 褲子</option>
-                                  <option value="skirt">👗 半身裙</option>
-                                  <option value="dress">👗 連身裙</option>
-                                  <option value="shoes">👟 鞋子</option>
-                                  <option value="bag">👜 包包</option>
-                                </select>
-                             </div>
-                          </div>
-                          <div className="hidden xl:block w-[1px] h-10 bg-slate-200 mx-1 shrink-0"></div>
-                          
-                          <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" onChange={handleBatchUpload} />
-                          <button onClick={() => {
-                             if (!isAutoMode) {
-                                const cat = document.getElementById('upload-category').value;
-                                if (!cat) {
-                                   showToast("⚠️ 請先在下拉選單【選擇分類】！");
-                                   const selectParent = document.getElementById('upload-category').parentNode;
-                                   selectParent.classList.add('ring-2', 'ring-red-400');
-                                   setTimeout(() => selectParent.classList.remove('ring-2', 'ring-red-400'), 1200);
-                                   return;
-                                }
-                             } else if (isAutoMode && !aiModel) {
-                                showToast("⏳ 免費的本地 AI 模型下載中... (首次載入需時約 15 MB) 請耐心稍候片刻再試！");
-                                return;
-                             }
-                             fileInputRef.current.click();
-                          }} className={`w-full xl:w-auto px-6 py-4 text-white rounded-2xl font-bold flex items-center justify-center gap-3 shadow-lg shadow-black/10 transition-all active:scale-95 shrink-0 ${isAutoMode ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-90' : 'bg-slate-900 hover:bg-black'}`}>
-                             {isAutoMode ? <Icon name="sparkles" size={18} /> : <Icon name="plus" size={18} />}
-                             {isAutoMode ? 'AI 離線智能匯入' : '點選相片'}
-                          </button>
-                       </div>
-                    </div>
+                                 <div className="hidden xl:block w-[1px] h-10 bg-slate-200 mx-1 shrink-0"></div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-4 md:gap-6">
-                       {wardrobe.map(item => (
-                         <div key={item.id} className="bg-white p-3 md:p-4 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 relative group flex flex-col cursor-pointer overflow-hidden transform hover:-translate-y-1">
-                            <button onClick={(e) => { e.stopPropagation(); deleteItem(item.id); }} className="absolute top-3 right-3 p-2 bg-red-100 text-red-600 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200 z-10 hover:bg-red-500 hover:text-white"><Icon name="trash" size={14} /></button>
-                            
-                            {/* 分類小拉霸 (可點擊修改) */}
-                            <select 
-                               onClick={(e) => e.stopPropagation()} 
-                               onChange={(e) => updateItemCategory(item.id, e.target.value)} 
-                               value={item.type}
-                               title="點擊修改分類"
-                               className="absolute top-4 left-4 text-[10px] font-black tracking-widest bg-white/95 backdrop-blur-sm pl-2 pr-6 py-1 rounded-md text-slate-500 shadow-sm z-10 uppercase border border-slate-200 cursor-pointer outline-none hover:bg-slate-100 hover:text-indigo-600 hover:border-indigo-200 appearance-none transition-all group-hover:shadow-md"
-                               style={{ backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 4px center', backgroundSize: '12px' }}
-                            >
-                                <option value="top">上衣</option>
-                                <option value="pants">褲子</option>
-                                <option value="skirt">半身裙</option>
-                                <option value="dress">連身裙</option>
-                                <option value="shoes">鞋子</option>
-                                <option value="bag">包包</option>
-                            </select>
+                                 <div className={`flex flex-col items-start w-full xl:w-auto transition-opacity ${isAutoMode ? 'opacity-30 pointer-events-none' : 'opacity-100'}`}>
+                                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-1">{isAutoMode ? '交給 AI 負責' : '上傳的分類是？'}</label>
+                                    <div className="bg-slate-50 rounded-2xl border border-slate-100 px-3 md:px-4 py-2 w-full flex items-center shadow-inner ring-1 ring-transparent hover:ring-indigo-100 transition-all min-w-[120px]">
+                                       <Icon name="category" size={16} className={`${isAutoMode ? 'text-slate-300' : 'text-indigo-400'} mr-2 shrink-0`} />
+                                       <select id="upload-category" defaultValue="" className="w-full bg-transparent text-slate-700 font-bold outline-none cursor-pointer appearance-none text-sm">
+                                          <option value="" disabled>👉 點我選擇</option>
+                                          <option value="top">👕 上衣</option>
+                                          <option value="pants">👖 褲子</option>
+                                          <option value="skirt">👗 半身裙</option>
+                                          <option value="dress">👗 連身裙</option>
+                                          <option value="shoes">👟 鞋子</option>
+                                          <option value="bag">👜 包包</option>
+                                       </select>
+                                    </div>
+                                 </div>
+                                 <div className="hidden xl:block w-[1px] h-10 bg-slate-200 mx-1 shrink-0"></div>
 
-                            <div className="aspect-square bg-slate-50 rounded-2xl overflow-hidden mb-3 md:mb-4 flex items-center justify-center w-full relative group-hover:bg-slate-100/50 transition-colors">
-                               <img src={item.imageUrl} className="w-[85%] h-[85%] object-contain filter group-hover:scale-110 transition-transform duration-500" loading="lazy" />
-                            </div>
-                            <div className="px-1">
-                               <p className="text-sm font-bold text-slate-800 truncate">{item.name}</p>
-                            </div>
-                         </div>
-                       ))}
-                       {wardrobe.length === 0 && (
-                          <div className="col-span-full py-24 bg-white border border-dashed border-slate-200 rounded-[2rem] flex flex-col items-center justify-center text-slate-400 gap-4">
-                             <div className="p-6 bg-slate-50 rounded-full mb-2"><Icon name="shirt" size={48} className="opacity-40" /></div>
-                             <p className="font-bold tracking-widest text-lg">資料庫目前為空</p>
-                             <p className="text-sm">請從上方選擇分類並批次匯入您的相片</p>
-                          </div>
-                       )}
-                    </div>
-                 </div>
-               )}
+                                 <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" onChange={handleBatchUpload} />
+                                 <button onClick={() => {
+                                    if (!isAutoMode) {
+                                       const cat = document.getElementById('upload-category').value;
+                                       if (!cat) {
+                                          showToast("⚠️ 請先在下拉選單【選擇分類】！");
+                                          const selectParent = document.getElementById('upload-category').parentNode;
+                                          selectParent.classList.add('ring-2', 'ring-red-400');
+                                          setTimeout(() => selectParent.classList.remove('ring-2', 'ring-red-400'), 1200);
+                                          return;
+                                       }
+                                    } else if (isAutoMode && !aiModel) {
+                                       showToast("⏳ 免費的本地 AI 模型下載中... (首次載入需時約 15 MB) 請耐心稍候片刻再試！");
+                                       return;
+                                    }
+                                    fileInputRef.current.click();
+                                 }} className={`w-full xl:w-auto px-6 py-4 text-white rounded-2xl font-bold flex items-center justify-center gap-3 shadow-lg shadow-black/10 transition-all active:scale-95 shrink-0 ${isAutoMode ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-90' : 'bg-slate-900 hover:bg-black'}`}>
+                                    {isAutoMode ? <Icon name="sparkles" size={18} /> : <Icon name="plus" size={18} />}
+                                    {isAutoMode ? 'AI 離線智能匯入' : '點選相片'}
+                                 </button>
+                              </div>
+                           </div>
 
-               {/* View: Favorites (我的穿搭日記) */}
-               {activeTab === 'favorites' && (
-                 <div className="space-y-6 animate-fade-in pb-20 md:pb-0">
-                    <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-8">我的穿搭日記</h2>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                       {savedOutfits.map(entry => (
-                         <div key={entry.id} className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all relative group h-64 flex gap-6 items-center">
-                            <button onClick={() => { if(confirm("移除這筆紀錄？")) setSavedOutfits(p => p.filter(s => s.id !== entry.id)); }} className="absolute top-4 right-4 p-2 text-slate-300 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors z-10">
-                              <Icon name="trash" size={16} />
-                            </button>
-                            
-                            <div className="w-1/2 h-full bg-slate-50 rounded-2xl relative overflow-hidden flex items-center justify-center bg-checkerboard border border-slate-100/50 p-4">
-                               {entry.outfit.dress ? (
-                                  <img src={entry.outfit.dress.imageUrl} className="w-full h-full object-contain filter drop-shadow-md" />
-                               ) : (
-                                  <div className="w-full h-full flex flex-col gap-2">
-                                     {entry.outfit.top && <img src={entry.outfit.top.imageUrl} className="flex-1 w-full object-contain filter drop-shadow-md" />}
-                                     {entry.outfit.bottom && <img src={entry.outfit.bottom.imageUrl} className="flex-1 w-full object-contain filter drop-shadow-md" />}
-                                  </div>
-                               )}
-                            </div>
+                           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-4 md:gap-6">
+                              {wardrobe.map(item => (
+                                 <div key={item.id} className="bg-white p-3 md:p-4 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 relative group flex flex-col cursor-pointer overflow-hidden transform hover:-translate-y-1">
+                                    <button onClick={(e) => { e.stopPropagation(); deleteItem(item.id); }} className="absolute top-3 right-3 p-2 bg-red-100 text-red-600 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200 z-10 hover:bg-red-500 hover:text-white"><Icon name="trash" size={14} /></button>
 
-                            <div className="w-1/2 flex flex-col justify-center gap-2">
-                               <p className="text-xs font-black text-indigo-500 uppercase tracking-widest">{entry.date}</p>
-                               <h3 className="text-xl font-bold text-slate-800 leading-tight">完美的每日穿搭</h3>
-                               <p className="text-sm text-slate-500 font-medium mt-2 line-clamp-2">
-                                 包含了 {entry.outfit.top?'上衣':'連身裙'} 及配飾，適合外出著用。
-                               </p>
-                            </div>
-                         </div>
-                       ))}
-                       {savedOutfits.length === 0 && (
-                          <div className="col-span-full py-20 text-center text-slate-400 font-bold bg-white rounded-3xl border border-dashed border-slate-200">
-                             <p className="tracking-widest">還沒有任何紀錄喔，趕快去生成一套吧！ 💖</p>
-                          </div>
-                       )}
-                    </div>
+                                    {/* 分類小拉霸 (可點擊修改) */}
+                                    <select
+                                       onClick={(e) => e.stopPropagation()}
+                                       onChange={(e) => updateItemCategory(item.id, e.target.value)}
+                                       value={item.type}
+                                       title="點擊修改分類"
+                                       className="absolute top-4 left-4 text-[10px] font-black tracking-widest bg-white/95 backdrop-blur-sm pl-2 pr-6 py-1 rounded-md text-slate-500 shadow-sm z-10 uppercase border border-slate-200 cursor-pointer outline-none hover:bg-slate-100 hover:text-indigo-600 hover:border-indigo-200 appearance-none transition-all group-hover:shadow-md"
+                                       style={{ backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 4px center', backgroundSize: '12px' }}
+                                    >
+                                       <option value="top">上衣</option>
+                                       <option value="pants">褲子</option>
+                                       <option value="skirt">半身裙</option>
+                                       <option value="dress">連身裙</option>
+                                       <option value="shoes">鞋子</option>
+                                       <option value="bag">包包</option>
+                                    </select>
 
-                 </div>
+                                    <div className="aspect-square bg-slate-50 rounded-2xl overflow-hidden mb-3 md:mb-4 flex items-center justify-center w-full relative group-hover:bg-slate-100/50 transition-colors">
+                                       <img src={item.imageUrl} className="w-[85%] h-[85%] object-contain filter group-hover:scale-110 transition-transform duration-500" loading="lazy" />
+                                    </div>
+                                    <div className="px-1">
+                                       <p className="text-sm font-bold text-slate-800 truncate">{item.name}</p>
+                                    </div>
+                                 </div>
+                              ))}
+                              {wardrobe.length === 0 && (
+                                 <div className="col-span-full py-24 bg-white border border-dashed border-slate-200 rounded-[2rem] flex flex-col items-center justify-center text-slate-400 gap-4">
+                                    <div className="p-6 bg-slate-50 rounded-full mb-2"><Icon name="shirt" size={48} className="opacity-40" /></div>
+                                    <p className="font-bold tracking-widest text-lg">資料庫目前為空</p>
+                                    <p className="text-sm">請從上方選擇分類並批次匯入您的相片</p>
+                                 </div>
+                              )}
+                           </div>
+                        </div>
+                     )}
+
+                     {/* View: Favorites (我的穿搭日記) */}
+                     {activeTab === 'favorites' && (
+                        <div className="space-y-6 animate-fade-in pb-20 md:pb-0">
+                           <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-8">我的穿搭日記</h2>
+
+                           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                              {savedOutfits.map(entry => (
+                                 <div key={entry.id} className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all relative group h-64 flex gap-6 items-center">
+                                    <button onClick={() => { if (confirm("移除這筆紀錄？")) setSavedOutfits(p => p.filter(s => s.id !== entry.id)); }} className="absolute top-4 right-4 p-2 text-slate-300 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors z-10">
+                                       <Icon name="trash" size={16} />
+                                    </button>
+
+                                    <div className="w-1/2 h-full bg-slate-50 rounded-2xl relative overflow-hidden flex items-center justify-center bg-checkerboard border border-slate-100/50 p-4">
+                                       {entry.outfit.dress ? (
+                                          <img src={entry.outfit.dress.imageUrl} className="w-full h-full object-contain filter drop-shadow-md" />
+                                       ) : (
+                                          <div className="w-full h-full flex flex-col gap-2">
+                                             {entry.outfit.top && <img src={entry.outfit.top.imageUrl} className="flex-1 w-full object-contain filter drop-shadow-md" />}
+                                             {entry.outfit.bottom && <img src={entry.outfit.bottom.imageUrl} className="flex-1 w-full object-contain filter drop-shadow-md" />}
+                                          </div>
+                                       )}
+                                    </div>
+
+                                    <div className="w-1/2 flex flex-col justify-center gap-2">
+                                       <p className="text-xs font-black text-indigo-500 uppercase tracking-widest">{entry.date}</p>
+                                       <h3 className="text-xl font-bold text-slate-800 leading-tight">完美的每日穿搭</h3>
+                                       <p className="text-sm text-slate-500 font-medium mt-2 line-clamp-2">
+                                          包含了 {entry.outfit.top ? '上衣' : '連身裙'} 及配飾，適合外出著用。
+                                       </p>
+                                    </div>
+                                 </div>
+                              ))}
+                              {savedOutfits.length === 0 && (
+                                 <div className="col-span-full py-20 text-center text-slate-400 font-bold bg-white rounded-3xl border border-dashed border-slate-200">
+                                    <p className="tracking-widest">還沒有任何紀錄喔，趕快去生成一套吧！ 💖</p>
+                                 </div>
+                              )}
+                           </div>
+
+                        </div>
+                     )}
+
+                  </div>
+               </main>
+
+               {/* Mobile Bottom Navigation */}
+               <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-slate-100 flex justify-around items-center px-2 pb-[env(safe-area-inset-bottom,16px)] pt-2 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] z-50">
+                  {[
+                     { id: 'planner', icon: 'sparkles', label: 'AI畫布' },
+                     { id: 'wardrobe', icon: 'grid', label: '衣櫃庫' },
+                     { id: 'favorites', icon: 'heart', label: '筆記本' }
+                  ].map(tab => (
+                     <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex flex-col items-center justify-center w-full py-2 gap-1.5 transition-all ${activeTab === tab.id ? 'text-indigo-600 scale-110' : 'text-slate-400 hover:text-slate-600'}`}>
+                        <Icon name={tab.icon} size={22} className={activeTab === tab.id ? "animate-bounce" : ""} />
+                        <span className="text-[10px] font-black tracking-wider">{tab.label}</span>
+                     </button>
+                  ))}
+               </nav>
+
+               {/* 處理中彈窗 (本地處理) */}
+               {isProcessingModalOpen && (
+                  <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] flex items-center justify-center p-6">
+                     <div className="bg-white rounded-[2rem] p-8 md:p-10 w-full max-w-lg shadow-2xl flex flex-col items-center animate-fade-in border border-slate-100">
+                        <div className="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center text-indigo-600 mb-6 relative">
+                           <div className="absolute inset-0 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+                           <Icon name="shirt" size={32} className="animate-pulse" />
+                        </div>
+                        <h3 className="text-2xl font-black text-slate-800 mb-2">相片匯入中</h3>
+                        <p className="text-slate-500 text-sm font-medium mb-8 text-center">正在將您的相片存入所選的分類中，<br />請稍候片刻...</p>
+
+                        <div className="w-full space-y-3 max-h-[40vh] overflow-y-auto pr-2 hide-scroll">
+                           {processQueue.map(p => (
+                              <div key={p.id} className="flex items-center gap-4 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                                 <img src={p.url} className="w-12 h-12 rounded-xl object-cover bg-white shadow-sm" />
+                                 <div className="flex-1 min-w-0">
+                                    <p className="text-xs font-bold text-slate-700 truncate">{p.name}</p>
+                                 </div>
+                                 <div className="flex-shrink-0">
+                                    {p.status === 'done' ? <span className="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold">✓</span> :
+                                       <div className="w-5 h-5 border-[3px] border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>}
+                                 </div>
+                              </div>
+                           ))}
+                        </div>
+                     </div>
+                  </div>
                )}
 
             </div>
-          </main>
+         );
+      }
 
-          {/* Mobile Bottom Navigation */}
-          <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-slate-100 flex justify-around items-center px-2 pb-[env(safe-area-inset-bottom,16px)] pt-2 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] z-50">
-             {[
-               { id: 'planner', icon: 'sparkles', label: 'AI畫布' },
-               { id: 'wardrobe', icon: 'grid', label: '衣櫃庫' },
-               { id: 'favorites', icon: 'heart', label: '筆記本' }
-             ].map(tab => (
-               <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex flex-col items-center justify-center w-full py-2 gap-1.5 transition-all ${activeTab === tab.id ? 'text-indigo-600 scale-110' : 'text-slate-400 hover:text-slate-600'}`}>
-                 <Icon name={tab.icon} size={22} className={activeTab === tab.id ? "animate-bounce" : ""} />
-                 <span className="text-[10px] font-black tracking-wider">{tab.label}</span>
-               </button>
-             ))}
-          </nav>
-
-          {/* 處理中彈窗 (本地處理) */}
-          {isProcessingModalOpen && (
-            <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] flex items-center justify-center p-6">
-              <div className="bg-white rounded-[2rem] p-8 md:p-10 w-full max-w-lg shadow-2xl flex flex-col items-center animate-fade-in border border-slate-100">
-                 <div className="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center text-indigo-600 mb-6 relative">
-                    <div className="absolute inset-0 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-                    <Icon name="shirt" size={32} className="animate-pulse" />
-                 </div>
-                 <h3 className="text-2xl font-black text-slate-800 mb-2">相片匯入中</h3>
-                 <p className="text-slate-500 text-sm font-medium mb-8 text-center">正在將您的相片存入所選的分類中，<br/>請稍候片刻...</p>
-                 
-                 <div className="w-full space-y-3 max-h-[40vh] overflow-y-auto pr-2 hide-scroll">
-                    {processQueue.map(p => (
-                       <div key={p.id} className="flex items-center gap-4 bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                          <img src={p.url} className="w-12 h-12 rounded-xl object-cover bg-white shadow-sm" />
-                          <div className="flex-1 min-w-0">
-                             <p className="text-xs font-bold text-slate-700 truncate">{p.name}</p>
-                          </div>
-                          <div className="flex-shrink-0">
-                             {p.status === 'done' ? <span className="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold">✓</span> : 
-                              <div className="w-5 h-5 border-[3px] border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>}
-                          </div>
-                       </div>
-                    ))}
-                 </div>
-              </div>
-            </div>
-          )}
-
-        </div>
-      );
-    }
-
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-  </script>
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+   </script>
 </body>
+
 </html>
